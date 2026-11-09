@@ -1,0 +1,5 @@
+#!/bin/sh
+# Wrapper — usa o venv do Scrapling (patchright, só o instructables precisa); sem ele, python3 puro.
+D="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+PY="$D/../scrapling/.venv/bin/python"; [ -x "$PY" ] || PY=python3
+exec "$PY" "$D/answers.py" "$@"
