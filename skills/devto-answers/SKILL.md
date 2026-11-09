@@ -19,6 +19,6 @@ A="/Volumes/1TB Mac/Desktop/social media/ferramentas/site-answers/answers"
 ```
 
 - Saída em `<pasta>/`: `devto-top.tsv` (candidatos: score, n, data, título, url) e `devto-read.md` (os `-t` primeiros lidos, com comentários).
-- Busca por TAG (uma por palavra, máx 3): use palavras-chave curtas e em inglês, ex.: `llm agents`. Score = reações; n = comentários.
+- Busca de texto real (`/api/articles/search`), ordenada por relevância. Score = reações; n = comentários. Consulta em inglês.
 - `ERRO: ...` → o site mudou ou caiu; mostrar o erro ao Pedro, não insistir em loop.
 - Leia `devto-read.md` e entregue um resumo (dores, números, ângulos), não o dump.

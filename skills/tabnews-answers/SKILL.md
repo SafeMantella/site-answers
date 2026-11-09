@@ -19,6 +19,6 @@ A="/Volumes/1TB Mac/Desktop/social media/ferramentas/site-answers/answers"
 ```
 
 - Saída em `<pasta>/`: `tabnews-top.tsv` (candidatos: score, n, data, título, url) e `tabnews-read.md` (os `-t` primeiros lidos, com comentários).
-- Sem endpoint de busca: filtra o título nas 300 publicações mais relevantes; tema de nicho pode voltar 0 resultados. Score = tabcoins; n = comentários.
+- Sem endpoint de busca: filtra o título nas 300 mais relevantes e 200 mais novas; tema de nicho pode voltar 0 resultados. Score = tabcoins; n = comentários.
 - `ERRO: ...` → o site mudou ou caiu; mostrar o erro ao Pedro, não insistir em loop.
 - Leia `tabnews-read.md` e entregue um resumo (dores, números, ângulos), não o dump.

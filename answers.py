@@ -14,20 +14,18 @@ def get(url, raw=False):
     with ur.urlopen(ur.Request(url, headers={"User-Agent": "Mozilla/5.0 (answers-cli; read-only)"}), timeout=30) as f:
         return f.read().decode() if raw else json.load(f)
 
-def devto(Q, n):  # ponytail: a API oficial não tem busca de texto; 1 tag por palavra (máx 3)
-    seen = {}
-    for w in Q.lower().split()[:3]:
-        for a in get(f"https://dev.to/api/articles?tag={q(w)}&top=365&per_page={n}"):
-            seen[a["id"]] = row(a["title"], a["url"], a["public_reactions_count"], a["comments_count"], a["published_at"], id=a["id"])
-    return list(seen.values())
+def devto(Q, n):  # /api/articles/search é a busca de texto real (fora da doc oficial); ordem = relevância, sem sort por reações
+    return [row(a["title"], a["url"], a["public_reactions_count"], a["comments_count"], a["published_at"], id=a["id"]) for a in get(f"https://dev.to/api/articles/search?q={q(Q)}&per_page={n}")]
 
 def devto_read(r):
     return get(f"https://dev.to/api/articles/{r['id']}")["body_markdown"], [(0, (c.get("user") or {}).get("username", "?"), txt(c["body_html"])) for c in get(f"https://dev.to/api/comments?a_id={r['id']}")]
 
-def tabnews(Q, n):  # ponytail: sem endpoint de busca; filtra o título nas 300 mais relevantes
-    ws, rows = Q.lower().split(), []
-    for p in range(1, 4):
-        for c in get(f"https://www.tabnews.com.br/api/v1/contents?strategy=relevant&page={p}&per_page=100"):
+def tabnews(Q, n):  # ponytail: sem endpoint de busca; filtra o título nas 300 mais relevantes + 200 mais novas
+    ws, rows, seen = Q.lower().split(), [], set()
+    for st, p in [("relevant", 1), ("relevant", 2), ("relevant", 3), ("new", 1), ("new", 2)]:
+        for c in get(f"https://www.tabnews.com.br/api/v1/contents?strategy={st}&page={p}&per_page=100"):
+            if c["id"] in seen: continue
+            seen.add(c["id"])
             hit = sum(w in (c.get("title") or "").lower() for w in ws)
             if hit: rows.append(row(c["title"], f"https://www.tabnews.com.br/{c['owner_username']}/{c['slug']}", c["tabcoins"], c["children_deep_count"], c["published_at"], hit=hit, user=c["owner_username"], slug=c["slug"]))
     return rows
